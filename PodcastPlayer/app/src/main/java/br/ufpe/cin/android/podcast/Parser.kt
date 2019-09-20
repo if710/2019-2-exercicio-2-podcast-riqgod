@@ -115,12 +115,20 @@ object Parser {
             } else if (name == "description") {
                 description = readData(parser, "description")
             } else if (name == "enclosure"){
-                downloadLink = readData(parser, name)
+                downloadLink = readAttribute(parser,name,"url")
             } else {
                 skip(parser)
             }
         }
         return ItemFeed(title!!, link!!, pubDate!!, description!!, downloadLink!!)
+    }
+
+    fun readAttribute(parser: XmlPullParser, tag: String, attribute: String): String {
+        parser.require(XmlPullParser.START_TAG, null, tag)
+        val data = parser.getAttributeValue(null, attribute)
+        parser.nextTag()
+        parser.require(XmlPullParser.END_TAG, null, tag)
+        return data
     }
 
     // Processa tags de forma parametrizada no feed.

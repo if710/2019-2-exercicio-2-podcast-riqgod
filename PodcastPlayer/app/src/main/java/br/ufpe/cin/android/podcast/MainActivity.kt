@@ -2,8 +2,12 @@ package br.ufpe.cin.android.podcast
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.annotation.UiThread
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.toast
 import org.jetbrains.anko.uiThread
@@ -19,8 +23,14 @@ class MainActivity : AppCompatActivity() {
             val xmlLink= URL("https://www.genkidama.com.br/blog/category/anikencast/feed/podcast/").readText()
             val itensFeed = Parser.parse(xmlLink)
             uiThread{
-                toast(itensFeed.toString())
+                recyclerView.layoutManager = LinearLayoutManager(this@MainActivity)
+                recyclerView.adapter = CustomAdapter(itensFeed, this@MainActivity )
+                recyclerView.addItemDecoration(
+                    DividerItemDecoration(this@MainActivity,LinearLayoutManager.VERTICAL)
+                )
+
             }
+
         }
 
 
