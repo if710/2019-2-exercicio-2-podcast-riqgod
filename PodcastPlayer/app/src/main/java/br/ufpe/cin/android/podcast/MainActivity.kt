@@ -18,21 +18,23 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        val database = ItemFeedDB.getDatabase(this)
         doAsync{
             val xmlLink= URL("https://www.genkidama.com.br/blog/category/anikencast/feed/podcast/").readText()
-            val itensFeed = Parser.parse(xmlLink)
+            val itemsFeed = Parser.parse(xmlLink)
             uiThread{
                 recyclerView.layoutManager = LinearLayoutManager(this@MainActivity)
-                recyclerView.adapter = CustomAdapter(itensFeed, this@MainActivity )
+                recyclerView.adapter = CustomAdapter(itemsFeed, this@MainActivity )
                 recyclerView.addItemDecoration(
                     DividerItemDecoration(this@MainActivity,LinearLayoutManager.VERTICAL)
                 )
 
             }
-
+            for (item in itemsFeed) {
+                database.itemFeedDAO().addItem(item)
+                println(item)
+            }
         }
-
 
     }
 }
