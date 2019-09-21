@@ -114,8 +114,8 @@ object Parser {
                 pubDate = readData(parser, "pubDate")
             } else if (name == "description") {
                 description = readData(parser, "description")
-            } else if (name == "enclosure"){
-                downloadLink = readAttribute(parser,name,"url")
+            } else if (name == "enclosure"){  // to get the download link using the tag enclosure
+                downloadLink = readAttribute(parser,name,"url") // to get the url from the tag, <enclosure url=[url] />
             } else {
                 skip(parser)
             }
@@ -123,7 +123,7 @@ object Parser {
         return ItemFeed(title!!, link!!, pubDate!!, description!!, downloadLink!!)
     }
 
-    fun readAttribute(parser: XmlPullParser, tag: String, attribute: String): String {
+    fun readAttribute(parser: XmlPullParser, tag: String, attribute: String): String { //method to the the attribute from the tag
         parser.require(XmlPullParser.START_TAG, null, tag)
         val data = parser.getAttributeValue(null, attribute)
         parser.nextTag()

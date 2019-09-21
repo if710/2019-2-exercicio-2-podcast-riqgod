@@ -5,6 +5,9 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
+//creating the database, and not instantiating it multiple times
+//based in the Room Class, where Estado was replaced by ItemFeed. The same about the interface class
+
 @Database(entities= arrayOf(ItemFeed::class), version=1)
 abstract class ItemFeedDB : RoomDatabase(){
     abstract fun itemFeedDAO(): ItemFeedDAO

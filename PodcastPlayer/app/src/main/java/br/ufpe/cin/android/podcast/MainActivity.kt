@@ -20,23 +20,28 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        //init database
         val database = ItemFeedDB.getDatabase(this@MainActivity)
+        //init list of items feed
         var itemsFeed = listOf<ItemFeed>()
         doAsync {
             try{
+                //trying to get the URL podcast xml rss
                 val xmlLink = URL("https://www.genkidama.com.br/blog/category/anikencast/feed/podcast/").readText()
+                //parsing the xml to get the list of items feed
                 itemsFeed = Parser.parse(xmlLink)
-
+                //adding to the database the items
                 for (item in itemsFeed) {
                     database.itemFeedDAO().addItem(item)
                     println(item)
                 }
 
-            }catch (e: Exception){
-                Toast.makeText(ctx,"Internet error! loading stored data...",Toast.LENGTH_SHORT).show()
+            }catch (e: Throwable){
+               // Toast.makeText(ctx,"Internet error! loading stored data...",Toast.LENGTH_SHORT).show() //this line broke the code and I wasted 2h xD
                 println("Internet error! loading stored data..."+e.toString())
                 itemsFeed = database.itemFeedDAO().allItems()
             } finally{
+                //updating the recyclerview UI
                 uiThread{
                     recyclerView.layoutManager = LinearLayoutManager(this@MainActivity)
                     recyclerView.adapter = CustomAdapter(itemsFeed, this@MainActivity )
